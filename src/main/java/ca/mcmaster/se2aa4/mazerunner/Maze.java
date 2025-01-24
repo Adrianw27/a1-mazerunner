@@ -21,4 +21,20 @@ public class Maze {
     public int getWidth(){
         return grid[0].length;
     }
+
+    private int findEntry(){
+        for(int i = 0; i < getHeight; i++){
+            if(this.grid[i][0] != '#'){
+                return i;
+            }
+        }
+    }
+
+    private int findExit(){
+        for(int i = 0; i < getHeight; i++){
+            if(this.grid[0][getWidth-1] != '#'){
+                return i;
+            }
+        }
+    }
 }
