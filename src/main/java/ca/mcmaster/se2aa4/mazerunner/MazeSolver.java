@@ -37,6 +37,7 @@ public class MazeSolver {
                 currentRow = rightRow;
                 currentCol = rightCol;
                 path.add('R');
+                path.add('F');
                 steps++;
                 continue;
             }
@@ -61,12 +62,15 @@ public class MazeSolver {
                 currentRow = leftRow;
                 currentCol = leftCol;
                 path.add('L');
+                path.add('F');
                 steps++;
                 continue;
             }
 
             // If none of the above are free, turn around
             direction = (direction + 2) % 4;
+            path.add('R');
+            path.add('R');
             steps++;
         }
 
@@ -77,5 +81,29 @@ public class MazeSolver {
         return row >= 0 && row < maze.length &&
                col >= 0 && col < maze[0].length &&
                maze[row][col] != '#';
+    }
+
+    public static String factorizePath(List<Character> path) {
+        if (path == null || path.isEmpty()) {
+            return "";
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        int count = 1;
+        char previous = path.get(0);
+        
+        for (int i = 1; i < path.size(); i++) {
+            char current = path.get(i);
+            if (current == previous) {
+                count++;
+            } else {
+                sb.append(count).append(previous).append(" ");
+                previous = current;
+                count = 1;
+            }
+        }
+        sb.append(count).append(previous);
+        
+        return sb.toString();
     }
 }

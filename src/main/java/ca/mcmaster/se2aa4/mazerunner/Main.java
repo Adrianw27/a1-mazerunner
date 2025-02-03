@@ -44,12 +44,8 @@ public class Main {
             logger.info("No path found using right-hand exploration.");
         } else {
             logger.info("Path using right-hand exploration:");
-            for (int i = 0; i < path.size(); i++) {
-                if(i > 0 && path.get(i) != path.get(i-1)){
-                    logger.info(" ");
-                }
-                logger.info(path.get(i));
-            }
+            String factorizedPath = MazeSolver.factorizePath(path);
+            System.out.println(factorizedPath);
         }
 
         logger.info("** End of MazeRunner");
