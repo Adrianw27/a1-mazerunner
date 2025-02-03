@@ -77,6 +77,41 @@ public class MazeSolver {
         return path;
     }
 
+    public static boolean validatePath(char[][] maze, int entry, int exit, String instructions) {
+        // 0 = Up, 1 = Right, 2 = Down, 3 = Left
+        int[] dRow = {-1, 0, 1, 0};
+        int[] dCol = {0, 1, 0, -1};
+
+        int direction = 1;
+        int currentRow = entry;
+        int currentCol = 0;
+
+        for (char c : instructions.toCharArray()) {
+            if (c == ' ') {
+                continue;
+            }
+            if (c == 'F') {
+                int newRow = currentRow + dRow[direction];
+                int newCol = currentCol + dCol[direction];
+                // If the move is out of bounds or hits a wall, path not valid
+                if (newRow < 0 || newRow >= maze.length ||
+                    newCol < 0 || newCol >= maze[0].length ||
+                    maze[newRow][newCol] == '#') {
+                    return false;
+                }
+                currentRow = newRow;
+                currentCol = newCol;
+            } else if (c == 'R') {
+                direction = (direction + 1) % 4;
+            } else if (c == 'L') {
+                direction = (direction + 3) % 4;
+            } else {
+                return false;
+            }
+        }
+        return (currentRow == exit && currentCol == maze[0].length - 1);
+    }
+
     private static boolean isFree(char[][] maze, int row, int col) {
         return row >= 0 && row < maze.length &&
                col >= 0 && col < maze[0].length &&
