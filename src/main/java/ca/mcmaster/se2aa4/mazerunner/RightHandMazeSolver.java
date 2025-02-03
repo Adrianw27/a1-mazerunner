@@ -1,12 +1,12 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class MazeSolver {
+public class RightHandMazeSolver implements MazeSolverAlgorithm {
 
     // Finds path from entry to exit using right-hand exploration
-    public static List<Character> findAnyPath(char[][] maze, int entry, int exit) {
+    @Override
+    public List<Character> findAnyPath(char[][] maze, int entry, int exit) {
 
         // Change in row or col variable based on the current direction
         // Indexes: 0 = Up, 1 = Right, 2 = Down, 3 = Left.
@@ -86,7 +86,8 @@ public class MazeSolver {
     * Validate a path provided by the user by attempting to traverse the maze from entry to exit
     * Params: Maze - grid, entry row, exit row, instructions - provided by user in canonical form
     */
-    public static boolean validatePath(char[][] maze, int entry, int exit, String instructions) {
+   @Override
+    public boolean validatePath(char[][] maze, int entry, int exit, String instructions) {
         // 0 = Up, 1 = Right, 2 = Down, 3 = Left
         int[] dRow = {-1, 0, 1, 0};
         int[] dCol = {0, 1, 0, -1};
@@ -117,30 +118,5 @@ public class MazeSolver {
             }
         }
         return (currentRow == exit && currentCol == maze[0].length - 1); // If instructions are fully looped through, return true only if current position is the exit
-    }
-
-    // Takes in the canonical path and factorizes it.
-    public static String factorizePath(List<Character> path) {
-        if (path == null || path.isEmpty()) {
-            return "";
-        }
-        
-        StringBuilder sb = new StringBuilder(); // Use stringbuilder to easily edit the path
-        int count = 1; // Counter for repititions of current direction
-        char previous = path.get(0); 
-        
-        for (int i = 1; i < path.size(); i++) { // Loop through path
-            char current = path.get(i); 
-            if (current == previous) { // If the current direction is the same as the previous one, increment counter
-                count++;
-            } else { // As soon as current direction differs from the previous one: 
-                sb.append(count).append(previous).append(" "); // Append the count storing the repititions of the previous direction and the previous direction
-                previous = current; // Set the previous direction to the new current one
-                count = 1; // Reset the count
-            }
-        }
-        sb.append(count).append(previous); // Append the final count and previous direction
-        
-        return sb.toString();
     }
 }
