@@ -1,10 +1,8 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.commons.cli.*;
@@ -15,8 +13,8 @@ public class Main {
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
 
+        // Setup command-line option: -i
         Option inputFileOption = Option.builder("i")
-                .longOpt("input")
                 .hasArg(true)
                 .desc("Path to input file")
                 .required(true)
@@ -27,23 +25,40 @@ public class Main {
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
-
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
-            logger.error("/!\\ An error has occured /!\\");
+            logger.error("An error has occurred while parsing command line options", e);
         }
 
-        String inputFilePath = cmd.getOptionValue("input");
+        // Get file path
+        String inputFilePath = cmd.getOptionValue("i");
 
         char[][] mazeData = parseMaze(inputFilePath);
         Maze maze = new Maze(mazeData);
 
         logger.info("**** Computing path");
-        logger.info("PATH NOT COMPUTED");
+
+        List<Character> path = MazeSolver.findAnyPath(mazeData, maze.getEntry(), maze.getExit());
+        if (path.isEmpty()) {
+            logger.info("No path found using right-hand exploration.");
+        } else {
+            logger.info("Path using right-hand exploration:");
+            for (int i = 0; i < path.size(); i++) {
+                if(i > 0 && path.get(i) != path.get(i-1)){
+                    logger.info(" ");
+                }
+                logger.info(path.get(i));
+            }
+        }
+
         logger.info("** End of MazeRunner");
     }
 
+    /**
+     * Reads the maze file line by line and builds a 2D grid with it
+     * Walls are represented by '#' and open passages by ' '
+     */
     public static char[][] parseMaze(String inputFilePath) {
         List<char[]> rows = new ArrayList<>();
 
@@ -54,12 +69,12 @@ public class Main {
                 char[] lineChars = line.toCharArray();
                 for (int idx = 0; idx < line.length(); idx++) {
                     if (line.charAt(idx) == '#') {
-                        logger.info("WALL ");
+                        logger.debug("WALL ");
                     } else if (line.charAt(idx) == ' ') {
-                        logger.info("PASS ");
+                        logger.debug("PASS ");
                     }
                 }
-                logger.info(System.lineSeparator());
+                logger.debug(System.lineSeparator());
                 rows.add(lineChars);
             }
         } catch (Exception e) {
