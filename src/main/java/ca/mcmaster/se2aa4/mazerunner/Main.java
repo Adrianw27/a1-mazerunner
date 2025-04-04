@@ -41,10 +41,11 @@ public class Main {
         char[][] mazeData = MazeParser.parseMaze(inputFilePath);
         Maze maze = new Maze(mazeData);
         MazeSolverAlgorithm solver = new RightHandMazeSolver();
+        MazeSolverAlgorithm loggingSolver = new LoggingMazeSolverDecorator(solver);
 
         if (cmd.hasOption("p")) { // If -p flag used, validate provided instructions
             String providedPath = cmd.getOptionValue("p");
-            boolean valid = solver.validatePath(maze, providedPath);
+            boolean valid = loggingSolver.validatePath(maze, providedPath);
             if(valid){
                 System.out.println("correct path");
             }
@@ -53,7 +54,7 @@ public class Main {
             }
         }
         else { // If no -p flag, print factorized maze instructions to user
-            List<Character> path = solver.findAnyPath(maze);
+            List<Character> path = loggingSolver.findAnyPath(maze);
             String factorizedPath = PathFormatter.factorizePath(path);
             System.out.println(factorizedPath);
         }
