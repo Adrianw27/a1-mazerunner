@@ -44,7 +44,7 @@ public class Main {
 
         if (cmd.hasOption("p")) { // If -p flag used, validate provided instructions
             String providedPath = cmd.getOptionValue("p");
-            boolean valid = solver.validatePath(maze.getGrid(), maze.getEntry(), maze.getExit(), providedPath);
+            boolean valid = solver.validatePath(maze, providedPath);
             if(valid){
                 System.out.println("correct path");
             }
@@ -53,7 +53,7 @@ public class Main {
             }
         }
         else { // If no -p flag, print factorized maze instructions to user
-            List<Character> path = solver.findAnyPath(maze.getGrid(), maze.getEntry(), maze.getExit());
+            List<Character> path = solver.findAnyPath(maze);
             String factorizedPath = PathFormatter.factorizePath(path);
             System.out.println(factorizedPath);
         }
